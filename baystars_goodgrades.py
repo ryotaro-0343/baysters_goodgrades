@@ -12,7 +12,7 @@ from bs4 import BeautifulSoup
 ボタンを押された時の処理で一度に両方行った。
 """
 
-#　メインウィンドウを作り、ボタンを実装する
+#　メインウィンドウを作る
 win = Tk()
 mylabel = Label(win,text = "ベイスターズの情報を見ますか？")
 mylabel.pack()
