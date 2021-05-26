@@ -14,7 +14,7 @@ from bs4 import BeautifulSoup
 
 #　メインウィンドウを作る
 win = Tk()
-mylabel = Label(win,text = "ベイスターズの情報を見ますか？")
+mylabel = Label(win,text = "ベイスターズの試合情報を見ますか？")
 mylabel.pack()
 
 def ok_click():
@@ -32,16 +32,16 @@ def ok_click():
     action = False      # 良い成績かどうかの判別
     out_count = 'a'
     butter_name = 'a'
-    game = True         # 試合が始まっているかの判別
+    game = False         # 試合が始まっているかの判別
 
     # 情報を記録するファイルの作成
     with open('test.text', 'w'):
         pass
 
     # tdタグに挟まれている箇所を抽出
-    soup = soup.find_all('td')
+    found = soup.find_all('td')
     # 抽出した箇所を一つずつ処理する
-    for child in soup:
+    for child in found:
         count += 1
 
         # 試合の中で打者100人までは判別できるようにした
@@ -85,9 +85,9 @@ def ok_click():
                 with open('test.text','a') as f:
                     f.write(text)
 
-            # 処理の最初にカウントを+1しているので、カウントが0の時は試合が始まっていないと分かる
-            if count == 0:
-                game = False
+    # 処理の最初にカウントを+1しているので、カウントが1以上なら試合が始まっていると分かる
+    if count >= 1:
+        game = True
 
     # 試合が始まっているとき、ファイルから成績を取ってきて、試合情報というタイトルで成績を表示
     if game == True:
@@ -96,7 +96,10 @@ def ok_click():
             mb.showinfo('試合情報',s)
     # 試合が始まっていないときの処理
     else:
-        mb.showinfo('試合情報','まだ試合が始まっていません')
+        #　試合開始時刻がinfomation--dateクラスの1番目の検索結果の先頭にあるので表示する
+        start = soup.select('.information--date')
+        start_time = start[0]
+        mb.showinfo('試合情報','試合開始時刻は {0} です'.format(start_time.text[:6]))
 
 # ボタンの見た目を作って実装
 okButton = Button(win,text = "見る",command=ok_click)
